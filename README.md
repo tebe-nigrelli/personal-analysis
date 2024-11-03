@@ -1,6 +1,6 @@
 # This notebook
 
-As explained in my [doom-emacs repository](https://github.com/tebe-nigrelli/doomemacs-config), I collect data on my habits and analyze it using mathematical methods. 
+As mentioned in my [doom-emacs repository](https://github.com/tebe-nigrelli/doomemacs-config), I collect data on my habits and analyze it using mathematical methods. 
 
 The following page gives an outline for my process. The full jupyter notebook is available for reference, while in this page I have highlighted its main features with some personal results.
 
@@ -134,6 +134,40 @@ At export, the data looks like this, down for 7184 rows, as of Sun Nov  3 14:26 
 </tbody>
 </table>
 
+
+# Data Cleaning
+
+As a choice of my study, I group the logs by time and category, running the scripts on the grouped data.
+
+> Instead of studying N events that happened in a week, I group them and consider only their combined duration. This ignores their number and variation by event, instead focusing on the total effect. With this transformation, doing something for 1 hour, 10 times, would be the same as doing it once, for 10 hours
+
+This is done for practical reasons: to reduce the size of the dataset, and to make the effect of particularly long events uniform.
+
+## Grouping in time
+
+Logs are first grouped into discrete time chunks: a "time step" size is picked (1 day, 1 week, 1 month, ...) and all events that fall under a time period are summed into the number of minutes dedicated to each activity. 
+
+> Instead of considering N occurrences of an event in each week, I just count the total minutes dedicated to each event type per week. 
+
+This subdivision results in a summary table
+
+## Grouping by category
+Each event has some tags associated to it. Take the following entry as an example, which has year, type, and location as tag: 2023_2024 for the school year, _LES_ for Lessons, _GER_ as in German and _@aulae_ to refer to classroom E.
+```
+Filename, Heading, ..., Tags
+University.org, "GER", ..., :2023_2024:LES:GER:@aulae:
+```
+
+The following are the main ones I use:
+- _SWO_, _SFR_ - sleep (with the distinction of waking up with an alarm or freely)
+- _LES_, _REV_, _EXM_ - lessons, revision for university and exams
+- _BUR_, _WRK_, _TDY_ - bureaucracy, various work tasks, tidying up
+- _PRJ_ - time dedicated to personal projects
+- _MDI_ - media such as reading books, watching movies or series
+
+Since events generally have multiple tags, one would want their combined duration, while remaining capable of differentiating between them by tag. For example, I may want to check how "REV" and "LES" correlate in time.
+
+My solution is to group events into their total duration, taking every group of tags in the dataset, as this is the natural way of grouping the events with minimal loss of information.
 
 # Data Analysis
 
