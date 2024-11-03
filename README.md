@@ -11,11 +11,14 @@ I store most of my data through a customised doom-emacs distribution, which can 
 For example, whenever I watch a movie, I open [Emacs](https://www.gnu.org/software/emacs/tour/) and use my own keyboard shortcuts to quickly store an entry in one of my log files. I use a slightly modified version of the [org-mode](https://orgmode.org/) markdown format, one of the available plugins, to store time stamps with the time zone. 
 
 In the original file, this is how a sample entry a stored in text: it shows that the 'Film' subheading, under the tag MDI (Media) has a single logged duration, lasting for the time between two time stamps, which amounts to one hour and fifty-five minutes, with 'Dune' as entry note.
->** Film :MDI:
-> :LOGBOOK:
-> CLOCK: [2024-10-16 Wed 22:24 +0200]--[2024-10-17 Thu 00:20 +0200] =>  1:56
-> \- Dune
-> :END:
+
+```
+** Film :MDI:
+:LOGBOOK:
+CLOCK: [2024-10-16 Wed 22:24 +0200]--[2024-10-17 Thu 00:20 +0200] =>  1:56
+- Dune
+:END:
+```
 
 # Exporting
 
