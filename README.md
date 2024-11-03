@@ -171,4 +171,12 @@ My solution is to group events into their total duration, taking every group of 
 
 # Data Analysis
 
-My
+# Extensions
+
+In its current state, the code has a lot of useful features that can be used to analyse the data, or as a basis for other data analysis methods, but it requires interactive development within Jupyter notebooks.
+
+I had plans to bundle the code into a flexible script that allowing users to order a certain output in the form of data, a report, or a graph. The program would sketch out the steps and cache intermediate stages while generating the output, to reduce the running time on average. 
+
+Although the idea was scrapped due to its complexity and time requirements, I would still like to revise the project in the future. For instance, I would like automatic yearly reports on my habits and productivity. 
+
+For the time being, most of my time is spent developing [Attimo](https://github.com/quercia-dev/Attimo/), a free and open source productivity tool. 
