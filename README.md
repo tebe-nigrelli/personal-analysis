@@ -189,6 +189,67 @@ As a choice of my study, I typically group logs by time and category, running th
 
 This is done for practical reasons: to reduce the size of the dataset, and to make the effect of particularly long events uniform. Moreover, I automatically store the summary table to reduce running time, using the file when needed.
 
+## Outliers
+
+Outlier events are identified based on deviation from the mean, measured in standard deviations: first, a critical number of standard deviations is fixed. All values that do not fall within the bounds are considered extreme. 
+
+The following command shows how a mask is typically extracted: in this case I group events by outline, that is, by their heading, in order to only compare similar events. 
+
+> extract_outliers_by_group_mask(df, "outline", "duration_timedelta", 3)
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+<colgroup>
+<col  class="org-right" />
+<col  class="org-left" />
+<col  class="org-right" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-right">&#xa0;</th>
+<th scope="col" class="org-left">outline</th>
+<th scope="col" class="org-right">duration (h)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-right">53</td>
+<td class="org-left">[Work, Helping-Various]</td>
+<td class="org-right">02:30</td>
+</tr>
+<tr>
+<td class="org-right">331</td>
+<td class="org-left">[Projects, Thesis-Help, Thesis-Data]</td>
+<td class="org-right">02:13</td>
+</tr>
+<tr>
+<td class="org-right">380</td>
+<td class="org-left">[Projects, Attimo-Personal-Clocking, Coding]</td>
+<td class="org-right">03:00</td>
+</tr>
+<tr>
+<td class="org-right">577</td>
+<td class="org-left">[Learning, Series, The Boys]</td>
+<td class="org-right">04:38</td>
+</tr>
+<tr>
+<td class="org-right">598</td>
+<td class="org-left">[Learning, Series, Better Call Saul]</td>
+<td class="org-right">02:30</td>
+</tr>
+</tbody>
+</table>
+
+The reason to group outliers stems from the range of recordings, as some kinds are much longer than other. If one considered all events, activities such as sleep would seem outliers and be removed. I should note that this method is also useful to identify events that were misrecorded, helping to correct faulty data.
+
+## Histograms
+
+I plot single properties such as duration with a personalisable function for ease of use.
+> plot_histogram(df["duration"], title="Duration histogram", bins=40)
+> 
+> ![](assets/Duration_Histogram.png)
+
+In the image above, one can see the relation between frequency of recording and duration of the log. The bell-looking distribution to the right is sleep, whereas events at the first peak left show personal activities and the second, lower peak corresponds to lessons, typically lasting 90 minutes.
 
 ### Grouping in time
 
