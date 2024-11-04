@@ -26,12 +26,12 @@ For example, whenever I watch a movie, I open [Emacs](https://www.gnu.org/softwa
 </thead>
 <tbody>
 <tr>
-<td class="org-left">C format</td>
+<td class="org-left">C</td>
 <td class="org-left">[%Y-%m-%d %a %H:%M]</td>
 <td class="org-left">[%Y-%m-%d %a %H:%M %z]</td>
 </tr>
 <tr>
-<td class="org-left">With minute</td>
+<td class="org-left">org-mode</td>
 <td class="org-left"><span class="timestamp-wrapper"><span class="timestamp">[2024-11-04 Mon 09:48 +0100]</span></span></td>
 <td class="org-left"><span class="timestamp-wrapper"><span class="timestamp">[2024-11-04 Mon 09:48 +0100]</span></span></td>
 </tr>
@@ -206,6 +206,8 @@ My solution is to group events into their total duration, taking every group of 
 The process results in a summary table which has one column for each unique combination of tags. These columns tags are empty for most of the time, but 
 
 # Data Analysis
+
+Coming soon... in the meantime you can find the code [here](https://github.com/tebe-nigrelli/doomemacs-config).
 
 # Extensions
 
