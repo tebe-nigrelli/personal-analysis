@@ -2,7 +2,7 @@
 
 As mentioned in my [doom-emacs repository](https://github.com/tebe-nigrelli/doomemacs-config), I like to collect data on my habits and analyze it using mathematical methods. 
 
-The following page gives an outline for my process. The [full jupyter notebook](Common%20Agenda%20AnalysisFramework.ipynb) is available for reference, while in this page I have highlighted its main features with some personal results.
+The following page gives an outline for my process. The [full jupyter notebook](Common%20Agenda%20AnalysisFramework.ipynb) is available for reference, while here I have highlighted its main features with some personal results.
 
 # Data Collection 
 
@@ -242,7 +242,37 @@ The following command shows how a mask is typically extracted: in this case I gr
 
 The reason to group outliers stems from the range of recordings, as some kinds are much longer than other. If one considered all events, activities such as sleep would seem outliers and be removed. I should note that this method is also useful to identify events that were misrecorded, helping to correct faulty data.
 
-## Histograms
+## Utilities
+
+The **pandas** and **matplotlib** libraries offer a variety of methods and shortcuts to filter dataframes by the values of their columns, or to visualise data quickly. As some data types I use are not standard, I wrote some methods to help with operations.
+
+## Outline Navigation
+
+Outlines are lists of strings which represent the position of a log inside a file. Consider the following file structure.
+```
+Heading 1
+└─► Subheading 2
+└─► Subheading 3
+      Log A
+      Log B
+    │  
+    └─► Subheading 4
+        Log1
+        Log2
+```
+From the example, _Log A_ will have as outline: ["Heading 1", "Subheading 3"]. Specialised methods are used to select clocks based on which outline criteria they match. For example, _Log A_ and _Log B_ are under "Subheading 3" but not "Subheading 4". The following methods are used:
+
+> get_exact_outline_mask(df: pd.DataFrame, outline: list) -> pd.DataFrame
+
+> get_any_outline_mask(df: pd.DataFrame, outline: str) -> pd.DataFrame
+
+> get_index_outline(df: pd.DataFrame, outline: str, index: int) -> pd.DataFrame:
+
+The same is done for tags: events can be selected if their tags are a subset of the desired tags.
+
+> get_subset_match_tags_mask(cl: pd.Series, tags) -> pd.Series:
+
+### Histograms
 
 I plot single properties such as duration with a personalisable function for ease of use.
 > plot_histogram(df["duration"], title="Duration histogram", bins=40)
@@ -251,7 +281,19 @@ I plot single properties such as duration with a personalisable function for eas
 
 In the image above, one can see the relation between frequency of recording and duration of the log. The bell-looking distribution to the right is sleep, whereas events at the first peak left show personal activities and the second, lower peak corresponds to lessons, typically lasting 90 minutes.
 
-### Grouping in time
+There are situations where one might want to visualize 2D histograms, so my code includes this functionality:
+
+![](assets/sleep2Dhist.png)
+
+I should note that the visualisation code accounts for nonstandard types: in the following plot I compare tags, of fronzenset type, to duration, of timedelta type.
+
+![](assets/sleep2Dhisttag.png)
+
+# Data Analysis
+
+The rest is coming soon... in the meantime you can find the code [here](Common%20Agenda%20Analysis%20Framework.ipynb).
+
+## Grouping in time
 
 Logs are first grouped into discrete time chunks: the user picks a "time step size", typically 1 day, 1 week or 1 month, and all events that fall under each time period are summed into the number of minutes dedicated to each activity. 
 
@@ -259,7 +301,7 @@ Logs are first grouped into discrete time chunks: the user picks a "time step si
 
 This subdivision results in a summary table which is a lot smaller compared to the original data: for instance, a 7 day summary of a full year will amount to only 52 rows, from an original 3000. It should also be noted that choosing very long or very short steps will result in either too few data points or many time chunks which are occupied in full by single events. In both cases, analysis is not very indicative.
 
-### Grouping by category
+## Grouping by category
 It should be noted that each event has multiple tags associated to it. Consider the following entry: it has year, type, and location as tag: 2023_2024 for the school year, _LES_ for Lessons, _GER_ as in German and _@aulae_ to refer to classroom 'e'.
 
 ```
@@ -281,9 +323,10 @@ My solution is to group events into their total duration, taking every group of 
 
 The process results in a summary table which has one column for each unique combination of tags. These columns are empty for most of the time, but they can be combined as needed, based on a desired merging rule.
 
-# Data Analysis
+## Merging by category
 
-Coming soon... in the meantime you can find the code [here](https://github.com/tebe-nigrelli/doomemacs-config).
+tag trees
+
 
 # Extensions
 
