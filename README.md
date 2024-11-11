@@ -170,7 +170,7 @@ I use primarily pandas to conduct my investigation, as its methods are particula
 
 # Data Cleaning
 
-Data is first filtered and formatted for analysis.
+Data is first filtered and formatted for analysis: it is read and altered minimally, and the user is able to filter entry by features, which are either numerical, string lists or of set type.
 
 ## Parsing
 
@@ -325,8 +325,35 @@ The process results in a summary table which has one column for each unique comb
 
 ## Merging by category
 
-tag trees
+The next step in data polishing is to pick the subject of analysis, which determines how the events, which are already grouped by tags, are further merged into categories, thus reducing the number of independent variables.
 
+For instance, an analysis that seeks to obtain a complete understanding of how all activities interact in the agenda will combine them uniformly (ie. "standard" in the example). However, a targeted analysis, such as in the following "study" example, of university study may split some tags into multiple categories, example, where "REV" is split into its "R", "E" and "P". In both cases, grouping is justified because there is very little overlap in how tags are grouped, which prevents double counting. As code, a tag_tree dictionary is used as a simple way to store merge rules.
+
+```
+tag_tree = {
+    "standard": {
+        "Sleep": ["SWO", "SFR"],
+        "Lessons": ["LES"],
+        "Revision": ["REV", "EXM"],
+        "Repetitive": ["BUR", "WRK", "TDY", "ORG", "REP"],
+        "Projects": ["PRJ"],
+        "Media": ["MDI"],
+        "Toilet": ["TLT", "TM"],
+        "Social": ["CAL", "OUT", "EVE", "DOG"],
+    },
+
+    "study": {
+        "Theory": ["R"],
+        "Exercise": ["E"],
+        "Projects": ["P"],
+        "Exams": ["EXM"],
+        "Lessons": ["LES"],
+    }}
+```
+
+Following a two-step process may seem inefficient, as events are first merged by tag, and in a second moment combined into a single group. However, this makes it possible to cache results, running multiple analyses from the same summary table, following different perspectives.
+
+Interestingly, merging tags represents a change in paradigm: the user decides which set of tags should be counted in the same basket, and which represents different objects.
 
 # Extensions
 
