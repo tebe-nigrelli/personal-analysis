@@ -2,7 +2,12 @@
 
 As mentioned in my [doom-emacs repository](https://github.com/tebe-nigrelli/doomemacs-config), I like to collect data on my habits and analyze it using mathematical methods. 
 
-The following page gives an outline for my process. The [full jupyter notebook](Common%20Agenda%20AnalysisFramework.ipynb) is available for reference, while here I have highlighted its main features with some personal results.
+The following page gives an outline for my process. The [full jupyter notebooks](Common%20Agenda%20AnalysisFramework.ipynb) are available for reference, while here I have highlighted some features and results. The code is quite messy and begging to be formatted, which I intend to do some day.
+
+For the time being, I use two notebooks, one to visualise single events, and the other to summary trends.
+
+
+_TODO include image of the pipeline here_
 
 # Data Collection 
 
@@ -26,7 +31,7 @@ For example, whenever I watch a movie, I open [Emacs](https://www.gnu.org/softwa
 </thead>
 <tbody>
 <tr>
-<td class="org-left">C</td>
+<td class="org-left">C fmt</td>
 <td class="org-left">[%Y-%m-%d %a %H:%M]</td>
 <td class="org-left">[%Y-%m-%d %a %H:%M %z]</td>
 </tr>
@@ -133,36 +138,6 @@ At export, the data looks like this, all the way down for 7184 rows, as of Novem
 <td class="org-left">:2024:PRJ:</td>
 <td class="org-left">R Markov Chain automated improvements</td>
 </tr>
-<tr>
-<td class="org-left">Calendar.org</td>
-<td class="org-left">&ldquo;Projects&rdquo; &ldquo;Quantified-Self-Study&rdquo; &ldquo;Export Report&rdquo;</td>
-<td class="org-right">2024-01-03</td>
-<td class="org-right">+0100</td>
-<td class="org-right">18:30</td>
-<td class="org-right">195</td>
-<td class="org-left">:2024:PRJ:</td>
-<td class="org-left">R Markov Chain</td>
-</tr>
-<tr>
-<td class="org-left">Calendar.org</td>
-<td class="org-left">&ldquo;Projects&rdquo; &ldquo;Quantified-Self-Study&rdquo; &ldquo;Export Report&rdquo;</td>
-<td class="org-right">2024-01-03</td>
-<td class="org-right">+0100</td>
-<td class="org-right">14:00</td>
-<td class="org-right">228</td>
-<td class="org-left">:2024:PRJ:</td>
-<td class="org-left">R Statistic</td>
-</tr>
-<tr>
-<td class="org-left">Calendar.org</td>
-<td class="org-left">&ldquo;Projects&rdquo; &ldquo;Quantified-Self-Study&rdquo; &ldquo;Export Report&rdquo;</td>
-<td class="org-right">2024-01-03</td>
-<td class="org-right">+0100</td>
-<td class="org-right">12:05</td>
-<td class="org-right">60</td>
-<td class="org-left">:2024:PRJ:</td>
-<td class="org-left">Tweaking org-clock-export</td>
-</tr>
 </tbody>
 </table>
 
@@ -182,16 +157,17 @@ Typically, methods add results to the dataframe without overwriting existing dat
 
 In hindsight, I believe that a better choice would have been to produce columns and add them separately, but for the time being the code works to a satisfactory degree, so it does not warrant a rewrite.
 
-## Grouping Events
-As a choice of my study, I typically group logs by time and category, running the scripts only the summarised data.
+## Event Analysis
 
-> Instead of studying N events that happened in a week, I group them and only model their combined duration. This ignores their number and variation by event, instead focusing on the total effect. Doing an activity for 1 hour, 10 times, will look the same as doing it once, for 10 hours.
+Some simple properties of the data are generally observed as a preliminary step to analysis. 
 
-This is done for practical reasons: to reduce the size of the dataset, and to make the effect of particularly long events uniform. Moreover, I automatically store the summary table to reduce running time, using the file when needed.
+For instance, the following picture shows the relation between time spent reading some research paper and the time I started reading them. The code allows me to filter the events, determine their labels and handles plotting and colors automatically.
 
-## Outliers
+![](assets/research_papers_scatterplot.png)
 
-Outlier events are identified based on deviation from the mean, measured in standard deviations: first, a critical number of standard deviations is fixed. All values that do not fall within the bounds are considered extreme. 
+## Outlier Detection
+
+Outlier events are identified based on deviation from the mean of their duration, which is measured in standard deviations. A critical number of standard deviations is fixed and all values that do not fall within the bounds are considered extreme. 
 
 The following command shows how a mask is typically extracted: in this case I group events by outline, that is, by their heading, in order to only compare similar events. 
 
@@ -242,6 +218,13 @@ The following command shows how a mask is typically extracted: in this case I gr
 
 The reason to group outliers stems from the range of recordings, as some kinds are much longer than other. If one considered all events, activities such as sleep would seem outliers and be removed. I should note that this method is also useful to identify events that were misrecorded, helping to correct faulty data.
 
+## Deltas
+
+Outliers may also be detected from observing the distribution of time between consecutive activities. For instance, if an activity is suspended for months, it should be excluded altogether as it results in unbalanced and incomplete data.
+
+![](assets/project_events_timedeltas.png)
+This graph shows that most times project activities are carried out on a regular basis.
+
 ## Utilities
 
 The **pandas** and **matplotlib** libraries offer a variety of methods and shortcuts to filter dataframes by the values of their columns, or to visualise data quickly. As some data types I use are not standard, I wrote some methods to help with operations.
@@ -289,9 +272,13 @@ I should note that the visualisation code accounts for nonstandard types: in the
 
 ![](assets/sleep2Dhisttag.png)
 
-# Data Analysis
+# Summary Analysis
 
-The rest is coming soon... in the meantime you can find the code [here](Common%20Agenda%20Analysis%20Framework.ipynb).
+As a choice of my study, I typically group logs by time and category, running the scripts only the summarised data.
+
+> Instead of studying N events that happened in a week, I group them and only model their combined duration. This ignores their number and variation by event, instead focusing on the total effect. Doing an activity for 1 hour, 10 times, will look the same as doing it once, for 10 hours.
+
+This is done for practical reasons: to reduce the size of the dataset, and to make the effect of particularly long events uniform. Moreover, I automatically store the summary table to reduce running time, using the file when needed.
 
 ## Grouping in time
 
@@ -338,7 +325,6 @@ tag_tree = {
         "Repetitive": ["BUR", "WRK", "TDY", "ORG", "REP"],
         "Projects": ["PRJ"],
         "Media": ["MDI"],
-        "Toilet": ["TLT", "TM"],
         "Social": ["CAL", "OUT", "EVE", "DOG"],
     },
 
@@ -354,6 +340,26 @@ tag_tree = {
 Following a two-step process may seem inefficient, as events are first merged by tag, and in a second moment combined into a single group. However, this makes it possible to cache results, running multiple analyses from the same summary table, following different perspectives.
 
 Interestingly, merging tags represents a change in paradigm: the user decides which set of tags should be counted in the same basket, and which represents different objects.
+
+### Other methods
+
+In the next sections, I discuss the practicality and insight from using some methods in analysing the data.
+
+### Sparsity
+
+### PCA
+
+### Correlations
+
+### Clustering
+
+### Distribution
+
+### Transitions
+
+### Energy Function
+
+### UMAP - Topological Dimensionality Reduction
 
 # Extensions
 
