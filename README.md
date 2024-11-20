@@ -346,6 +346,8 @@ Interestingly, merging tags represents a change in paradigm: the user decides wh
 
 In the next sections, I discuss the practicality and insight from using some methods in analysing the data.
 
+![](assets/sparsity_university_histograms.png)
+
 ### Sparsity
 
 Something that I found surprising when first looking at the data is how sparse activities tend to be: I always thought that I would do multiple activities, every day, but for some categories such as those relating to university, most days do not involve any activities. 
@@ -445,11 +447,108 @@ The standard method (z-score normalisation) is used to verify the presence of ou
 </tbody>
 </table>
 
+### Normalisation
+
+### Clustering
+
+Consider how each data point in the summary table represents a combination of total times dedicated to each activity within a fixed timeframe:
+
+```
+Two data points of step-size '1 day' represent each a combination of times dedicated to every activity. A 'distance' can be defined between them, to record their relative difference. More complex operations can be built on this, to obtain interesting results.
+```
+
+Based on the relative 'similarity' between rows of the summary table, it is possible to group data points into 'clusters'. This can help to interpret different behaviours in the time-steps, such as _productive_ as opposed to _not productive_ during the university period.
+
+After choosing the number of clusters, I prefer to check the relative size of the groups to ensure that a split is somewhat even. It is possible for single distant points to be assigned their own group, which is not useful in Analysis. 
+
+The following gives the spread of 5 clusters over the [standard](#merging-by-category) grouping.
++ Cluster 0 :: 56%, 297 samples
++ Cluster 1 :: 5%, 29 samples
++ Cluster 2 :: 23%, 120 samples
++ Cluster 3 :: 10%, 51 samples
++ Cluster 4 :: 6%, 34 samples
+
+A **dendrogram** is also used at times to get a sense of the relative shape of the clusters: if the tree is balanced (eg. the green one), the cluster is somewhat 'compact', as opposed to having 'tails' or spikes (eg. the red cluster).
+
+![](assets/hierarchical_standard_dendrogram.png)
+
+I have found that **Agglomerative Clustering** works best in avoiding such extreme cases. In addition, varying the number of clusters can be useful to divide numerous groups into more precise categories depending on the number of points available.
+
+Some automatic methods were also developed to interpret the nature of each cluster:
+- _Computing the group mean for each category_: one can calculate the 'average' point in each cluster to get a sense of some typical values. This assumes that the group is convex, which tends to be almost always satisfied in the data, although it is not guaranteed by Agglomerative Clustering.
+- _Identifying how each cluster stands out_: given the mean value of each coordinate in a cluster, one can identify extreme values and automatically produce labels with significantly 'high' and 'low' qualities, using a z-score method.
+
+Expanding on the previously mentioned 5 clusters, the following table shows their noteworthy features, taken at a precision of at least _n_=1 standard deviation. The number _n_ is chosen by hand to regulate the number of noteworthy features: as higher numbers will exclude all but the most outstanding qualities.
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+<colgroup>
+<col  class="org-right" />
+<col  class="org-left" />
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-right">&#xa0;</th>
+<th scope="col" class="org-left">High</th>
+<th scope="col" class="org-left">Low</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-right">0</td>
+<td class="org-left">[&rsquo;Projects&rsquo;]</td>
+<td class="org-left">[]</td>
+</tr>
+<tr>
+<td class="org-right">1</td>
+<td class="org-left">[&rsquo;Repetitive&rsquo;]</td>
+<td class="org-left">[]</td>
+</tr>
+<tr>
+<td class="org-right">2</td>
+<td class="org-left">[&rsquo;Sleep&rsquo;, &rsquo;Revision&rsquo;, &rsquo;Media&rsquo;]</td>
+<td class="org-left">[&rsquo;Projects&rsquo;]</td>
+</tr>
+<tr>
+<td class="org-right">3</td>
+<td class="org-left">[&rsquo;Lessons&rsquo;]</td>
+<td class="org-left">[&rsquo;Media&rsquo;]</td>
+</tr>
+<tr>
+<td class="org-right">4</td>
+<td class="org-left">[&rsquo;Social&rsquo;]</td>
+<td class="org-left">[&rsquo;Sleep&rsquo;]</td>
+</tr>
+</tbody>
+</table>
+
+From the table, it seems that if one considers 5 groups of behaviour, _Projects_ and _Repetitive_ tasks (eg. going to the Post Office) don't reduce significantly the time dedicated to other activities, as opposed to _Lessons_, which reduce _Media_ consumption, for example.
+
+Clustering has the advantage of being nonparametric and nonlinear, making it effective at modelling qualitative properties, though this comes at the cost of a quantitative understanding of the data.
+
 ### PCA
+
+[Principal Component Analysis](https://youtu.be/FD4DeN81ODY) is an elementary technique which reduces the number of variables needed to represent the data. It is useful to both visualise and understand datasets, assuming they are 'simple' enough.
+
+More technically, PCA identifies the main directions in which the data points are 'spread' - you could imagine the whole set of points as a cloud, with PCA looking for its principal axes, in decreasing order of relevance. After finding these directions, the data is drawn in terms of these directions (ie. as a linear combination of a basis of feature vectors). 
+
+The following image is a 3D plot of PCA applied to the [5 clusters](#clustering) from the previous section. Given that the first three components represent 67% of the total variance (spread) of the data, this is a good representation of the true distribution of the data in the original 7-dimensional space of datapoints with columns specified by the [standard](#merging-by-category) tag_tree entry 
+![](assets/3d_PCA_standard.png)
+
+This process is particularly useful if the data is 'simple' enough (ie. features are explained linearly), because it means that some point can be expressed as a weighted sum of properties. 
+
 
 ### Correlations
 
-### Clustering
+As clustering does not give a precise sense of how different categories are related, correlation matrices are computed for each component of the data.
+
+A correlation matrix is a square table of correlations, representing how two variables tend to agree, rated from -1 to +1, depending on whether the value of one tends to be the negative of the other, the same, or unrelated, if 0.
+
+The following picture gives a sense of how different activities are correlated: a red value represents that the two activities tend to be high at the same time, whereas a blue value refers to one activity being high when the other is low. In either case, one should observe that correlation tends to be low (0.05), which should be attributed to a lot of hidden variables and unpredictability affecting the result.
+
+![](assets/standard_correlation_matrix_comparison.png)
+
+The picture compares two kinds of correlations: Pearson, which is susceptible to outliers, and Kendall, more robust to extreme cases. The columns of both matrices are then sorted by relative similarity. 
 
 ### Distribution
 
