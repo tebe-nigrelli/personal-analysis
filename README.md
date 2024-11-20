@@ -223,6 +223,7 @@ The reason to group outliers stems from the range of recordings, as some kinds a
 Outliers may also be detected from observing the distribution of time between consecutive activities. For instance, if an activity is suspended for months, it should be excluded altogether as it results in unbalanced and incomplete data.
 
 ![](assets/project_events_timedeltas.png)
+
 This graph shows that most times project activities are carried out on a regular basis.
 
 ## Utilities
@@ -346,6 +347,103 @@ Interestingly, merging tags represents a change in paradigm: the user decides wh
 In the next sections, I discuss the practicality and insight from using some methods in analysing the data.
 
 ### Sparsity
+
+Something that I found surprising when first looking at the data is how sparse activities tend to be: I always thought that I would do multiple activities, every day, but for some categories such as those relating to university, most days do not involve any activities. 
+
+![](assets/sparsity_standard_histogram.png)
+
+The chart above, taking 1 day as the step size, shows activities by how rarely they occupy days. The first column indicates that nearly 70% of days go without lessons. Naturally, this visualisation is susceptible to which time period is considered: in this case all of 2023, and 2024 up to November, over representing summer activities.
+
+### Outliers
+
+There is a constant effort to verify the existence of outliers in the data, as forgetting to insert data or 'over correcting' missing values may produce irregularities, skewing an analysis.
+
+The standard method (z-score normalisation) is used to verify the presence of outliers, and can help in understanding the nature of the data. The following table examplifies a typical output. Here, the values are written as minutes, and it is clear which are plausible and which are highly irregular.
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+<colgroup>
+<col  class="org-right" />
+<col  class="org-left" />
+<col  class="org-right" />
+<col  class="org-right" />
+<col  class="org-right" />
+<col  class="org-right" />
+<col  class="org-right" />
+<col  class="org-right" />
+<col  class="org-right" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-right">&#xa0;</th>
+<th scope="col" class="org-left">max</th>
+<th scope="col" class="org-right">from time</sub></th>
+<th scope="col" class="org-right">to time</sub></th>
+<th scope="col" class="org-right">Theory</th>
+<th scope="col" class="org-right">Exercise</th>
+<th scope="col" class="org-right">Projects</th>
+<th scope="col" class="org-right">Exams</th>
+<th scope="col" class="org-right">Lessons</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-right">0</td>
+<td class="org-left">Theory</td>
+<td class="org-right">2024-01-27</td>
+<td class="org-right">2024-01-28</td>
+<td class="org-right">465</td>
+<td class="org-right">45</td>
+<td class="org-right">0</td>
+<td class="org-right">0</td>
+<td class="org-right">0</td>
+</tr>
+<tr>
+<td class="org-right">1</td>
+<td class="org-left">Exercise</td>
+<td class="org-right">2024-01-30</td>
+<td class="org-right">2024-01-31</td>
+<td class="org-right">95</td>
+<td class="org-right">365</td>
+<td class="org-right">0</td>
+<td class="org-right">25</td>
+<td class="org-right">0</td>
+</tr>
+<tr>
+<td class="org-right">2</td>
+<td class="org-left">Projects</td>
+<td class="org-right">2024-05-17</td>
+<td class="org-right">2024-05-18</td>
+<td class="org-right">0</td>
+<td class="org-right">39</td>
+<td class="org-right">489</td>
+<td class="org-right">0</td>
+<td class="org-right">90</td>
+</tr>
+<tr>
+<td class="org-right">3</td>
+<td class="org-left">Exams</td>
+<td class="org-right">2024-01-23</td>
+<td class="org-right">2024-01-24</td>
+<td class="org-right">385</td>
+<td class="org-right">10</td>
+<td class="org-right">0</td>
+<td class="org-right">183</td>
+<td class="org-right">0</td>
+</tr>
+<tr>
+<td class="org-right">4</td>
+<td class="org-left">Lessons</td>
+<td class="org-right">2024-04-18</td>
+<td class="org-right">2024-04-19</td>
+<td class="org-right">0</td>
+<td class="org-right">0</td>
+<td class="org-right">0</td>
+<td class="org-right">0</td>
+<td class="org-right">600</td>
+</tr>
+</tbody>
+</table>
 
 ### PCA
 
