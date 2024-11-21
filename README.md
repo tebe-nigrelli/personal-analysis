@@ -346,6 +346,8 @@ Interestingly, merging tags represents a change in paradigm: the user decides wh
 
 In the next sections, I discuss the practicality and insight from using some methods in analysing the data.
 
+It is important to note that events and summaries have different properties and distributions. More precisely, the summary table is composed of rows with multiple data columns, as shown by the following picture, with histograms of how each column is spread.
+
 ![](assets/sparsity_university_histograms.png)
 
 ### Sparsity
@@ -532,11 +534,15 @@ Clustering has the advantage of being nonparametric and nonlinear, making it eff
 
 More technically, PCA identifies the main directions in which the data points are 'spread' - you could imagine the whole set of points as a cloud, with PCA looking for its principal axes, in decreasing order of relevance. After finding these directions, the data is drawn in terms of these directions (ie. as a linear combination of a basis of feature vectors). 
 
-The following image is a 3D plot of PCA applied to the [5 clusters](#clustering) from the previous section. Given that the first three components represent 67% of the total variance (spread) of the data, this is a good representation of the true distribution of the data in the original 7-dimensional space of datapoints with columns specified by the [standard](#merging-by-category) tag_tree entry 
+![](assets/PCA_standard_variance.png)
+
+When applying PCA on data with _n_ variables, _n_ principal vectors are found in decreasing order of importance. From the graph, one sees that using only the first three components to describe the data, a high 67% of the variance (spread) is still explained (look at the red line), which makes the reduction useful for some purposes like visualisation. This means that the data will be reduced from _n_ = 8 variables to 3 variables, which are obtained from  a matrix transformation of the original data.
+
+The following image is a 3D plot of PCA applied to the [5 clusters](#clustering) from the previous section. As 67% of total variance is maintained, it is a good representation of the true distribution of the data in the original 7-dimensional space of the data, where columns are specified by the [standard](#merging-by-category) tag_tree entry. The new plot shows each point in terms of the three new PCA component vectors. Moreover, the labels are obtained from the [cluster means method](#clustering) in the previous section.
+
 ![](assets/3d_PCA_standard.png)
 
-This process is particularly useful if the data is 'simple' enough (ie. features are explained linearly), because it means that some point can be expressed as a weighted sum of properties. 
-
+PCA process is particularly useful if the data is 'simple' enough (ie. features are explained linearly), because it means that some point can be expressed as a weighted sum of properties. 
 
 ### Correlations
 
