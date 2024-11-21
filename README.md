@@ -142,7 +142,7 @@ At export, the data looks like this, all the way down for 7184 rows, as of Novem
 </tbody>
 </table>
 
-I use primarily pandas to conduct my investigation, as its methods are particularly efficient and straightforward, in addition to having the necessary features. The table with the data is read into a pandas dataframe, which I will use throughout my code.
+I use primarily the **pandas** Python library to conduct my investigation, as its methods are particularly efficient and straightforward, in addition to having the necessary features. The table with the data is read into a pandas dataframe, which I will use throughout my code.
 
 # Data Cleaning
 
@@ -348,7 +348,7 @@ Following a two-step process may seem inefficient, as events are first merged by
 
 Interestingly, merging tags represents a change in paradigm: the user decides which set of tags should be counted in the same basket, and which represents different objects.
 
-### Other methods
+## Other methods
 
 In the next sections, I discuss the practicality and insight from using some methods in analysing the data.
 
@@ -628,7 +628,7 @@ The following matrix shows the best cost vectors by time period. It should be no
 
 On a final note, energy methods fail to capture nonlinear effects: activities twice as long will be considered twice as 'costly'. There is also a deep ambiguity in what is generally done and what is exhausting to do: just being signed up for class does not guarantee paying attention, hence being drained by the energy expense.
 
-### Topological Dimensionality Reduction
+
 
 # Extensions
 
