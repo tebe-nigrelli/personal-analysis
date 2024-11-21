@@ -451,6 +451,10 @@ The standard method (z-score normalisation) is used to verify the presence of ou
 
 ### Normalisation
 
+In order for some data analysis methods to work properly, numeric data is extracted from the summary table, then each column is normalised so its mean is 0 and its standard deviation is 1 (z-score normalisation). 
+
+The **Pandas** library allows to perform a study, then redisplay the data with the original metadata from the summary table, as the indices in the old and modified table match and can be used to merge the results to their labels.
+
 ### Clustering
 
 Consider how each data point in the summary table represents a combination of total times dedicated to each activity within a fixed timeframe:
@@ -528,6 +532,18 @@ From the table, it seems that if one considers 5 groups of behaviour, _Projects_
 
 Clustering has the advantage of being nonparametric and nonlinear, making it effective at modelling qualitative properties, though this comes at the cost of a quantitative understanding of the data.
 
+### Distributions in Time
+
+Having identified clusters and their labels, I also like to visualise them in relation to relevant time frames. 
+
+For example, fixing 5 clusters over the [standard](#merging-by-category) division of tags, I can obtain a histogram of how 'days' are spread throughout: _Project_ days focus on Sundays, whereas _Social_ days are preferred on Saturday and Tuesday.
+
+![](assets/standard_week_distribution.png)
+
+The same can be done over the months, which confirms the correctness of the labels.
+
+![](assets/standard_month_distribution.png)
+
 ### PCA
 
 [Principal Component Analysis](https://youtu.be/FD4DeN81ODY) is an elementary technique which reduces the number of variables needed to represent the data. It is useful to both visualise and understand datasets, assuming they are 'simple' enough.
@@ -546,19 +562,23 @@ PCA process is particularly useful if the data is 'simple' enough (ie. features 
 
 ### Correlations
 
-As clustering does not give a precise sense of how different categories are related, correlation matrices are computed for each component of the data.
+As clustering does not give a precise sense of how different categories are related, correlation matrices are computed for each component of the data, giving a finer notion of how columns in the summary table relate.
 
-A correlation matrix is a square table of correlations, representing how two variables tend to agree, rated from -1 to +1, depending on whether the value of one tends to be the negative of the other, the same, or unrelated, if 0.
+A correlation matrix is a square table of correlation coefficients, representing how two variables tend to agree in size, rated from -1 to +1, depending on whether the value of one tends to be the negative of the other, the same, or totally unrelated, if 0.
 
 The following picture gives a sense of how different activities are correlated: a red value represents that the two activities tend to be high at the same time, whereas a blue value refers to one activity being high when the other is low. In either case, one should observe that correlation tends to be low (0.05), which should be attributed to a lot of hidden variables and unpredictability affecting the result.
 
 ![](assets/standard_correlation_matrix_comparison.png)
 
-The picture compares two kinds of correlations: Pearson, which is susceptible to outliers, and Kendall, more robust to extreme cases. The columns of both matrices are then sorted by relative similarity. 
+I experimented with using more kinds of correlations: Pearson, which is susceptible to outliers, and Kendall, more robust to extreme cases. This can be seen in _Sleep_ and _Revision_ appear drastically different due to the presence of outliers; ie. points with either a lot of lessons and a lot of revision, which skew the whole statistic.
 
-### Distribution
+In my study of the correlations, I also observed correlations between present and future values, answering the question, "If I do a lot of one thing now, how much more do I do another thing later?". One weakness of this method is to be symmetric, not distinguishing between high now and low later and low now and high later. Still, it is interesting to see some interpretable results: a lot of _projects_ will reduce _media consumption_.
+
+![](assets/kendall_correlation_standard.png)
 
 ### Transitions
+
+
 
 ### Energy Function
 
