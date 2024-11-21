@@ -56,7 +56,7 @@ CLOCK: [2024-10-16 Wed 22:24 +0200]--[2024-10-17 Thu 00:20 +0200] =>  1:56
 
 # Exporting
 
-The data is exported to a csv table using [Jeff Filipovits](https://github.com/legalnonsense)'s brilliant org-csv-export package. It is particularly useful because it was designed to be extensible: users can define functions that retrieve data for each row, adding the results to the export file. The full code is available at [org-clock-export](https://github.com/legalnonsense/org-clock-export) and the file 'org-csv-util.el' of this repository contains my settings.
+The data is exported to a csv table using [Jeff Filipovits](https://github.com/legalnonsense)'s brilliant [org-csv-export](https://github.com/legalnonsense/org-clock-export) package. It is particularly useful because it was designed to be extensible: users can define functions that retrieve data for each row, adding the results to the export file. The full code is available at [org-clock-export](https://github.com/legalnonsense/org-clock-export) and the file 'org-csv-util.el' of this repository contains my settings.
 
 The following is my export format: I make sure to include position in the log inside the file (outline), tags and any included notes. 
 
@@ -608,14 +608,34 @@ Social - 0.10603498.
 
 ### Energy Function
 
+I eventually asked myself whether combinations of activities in a time step could be described in terms of an 'energy budget'. For instance, doing 'costly' activities such as _Revision_ would reduce the energy for other costly activities such as _Projects_, while regenerative activities such as _Media_ consumption would add energy.
+
+I considered the simplest model: using a vector of costs _c_, define energy of a vector $x$ of activities in the time step as $E(x) := c\cdot x$. The choice of optimal $c$ would result from the minimisation of the mean spread of the energy value, over all recordings: 
+
+$$c := \text{argmin}_{c \in \mathbb{R}^n} \mathbb{E}\left[\text{Var}(c \cdot x)\right]$$
+
+The reasoning behind this formula is that the 'Energy' value should be as close to constant as possible (it would not be a good definition otherwise). Moreover, depending on time of the year, it is reasonable to assume that energy dynamics change. For example, what is typically done to rest or for fun during the exam period is fundamentally different from summer of during lessons, so any energy calculations should be contextualised. 
+
+The following heatmap proposes multiple cost vector for the university period, ranking them by variance and showing the histogram for $c\cdot x$ at the right.
+
+![](assets/lessons_standard_energy_bars.png)
+
+At a fundamental level, it is unclear to pick the best cost vector because the true uncertaintay of the data is not known. This is also related to linear models performing poorly on the data: there is too much randomness in the features and how they are distributed.
+
+The following matrix shows the best cost vectors by time period. It should be noted that sign has no absolute meaning, as vectors $c$ and $-c$ produce the same result.
+
+![](assets/standard_energy_comparison.png)
+
+On a final note, energy methods fail to capture nonlinear effects: activities twice as long will be considered twice as 'costly'. There is also a deep ambiguity in what is generally done and what is exhausting to do: just being signed up for class does not guarantee paying attention, hence being drained by the energy expense.
+
 ### Topological Dimensionality Reduction
 
 # Extensions
 
-In its current state, the code has a lot of useful features that can be used to analyse the data, or as a basis for other data analysis methods, but it requires interactive development within Jupyter notebooks.
+In its current state, the code has a lot of useful features that can be used to analyse the data, or as a basis for other data analysis methods, but it requires interactive development within Jupyter.
 
 I had plans to bundle the code into a flexible script that would allow users to 'order' a certain output, whether data, a report, or a visual graph. The program would identify all the intermediate steps needed to compute the results, and save them to memory, while generating the output, to reduce its average running time. 
 
 Although the idea was scrapped due to its complexity and time requirements, I would still like to revise the project in the future. For instance, I would like to have a script that automatically compiles yearly reports on my habits and productivity. 
 
-For the time being, most of my time is spent developing [Attimo](https://github.com/quercia-dev/Attimo/), a free and open source productivity tool. 
+These days, most of my time is spent developing [Attimo](https://github.com/quercia-dev/Attimo/), a free and open source productivity tool. 
