@@ -59,7 +59,8 @@ CLOCK: [2024-10-16 Wed 22:24 +0200]--[2024-10-17 Thu 00:20 +0200] =>  1:56
 The data is exported to a csv table using [Jeff Filipovits](https://github.com/legalnonsense)'s brilliant org-csv-export package. It is particularly useful because it was designed to be extensible: users can define functions that retrieve data for each row, adding the results to the export file. The full code is available at [org-clock-export](https://github.com/legalnonsense/org-clock-export) and the file 'org-csv-util.el' of this repository contains my settings.
 
 The following is my export format: I make sure to include position in the log inside the file (outline), tags and any included notes. 
-```
+
+```lisp
 '("filename" (file-name-nondirectory (buffer-file-name)) 
   "outline"  (tn/list-to-string (org-get-outline-path t t))
   "date"     (concat start-year "-" start-month "-" start-day)
@@ -246,15 +247,20 @@ Heading 1
 ```
 From the example, _Log A_ will have as outline: ["Heading 1", "Subheading 3"]. Specialised methods are used to select clocks based on which outline criteria they match. For example, _Log A_ and _Log B_ are under "Subheading 3" but not "Subheading 4". The following methods are used:
 
-> get_exact_outline_mask(df: pd.DataFrame, outline: list) -> pd.DataFrame
+```python
 
-> get_any_outline_mask(df: pd.DataFrame, outline: str) -> pd.DataFrame
+get_exact_outline_mask(df: pd.DataFrame, outline: list) -> pd.DataFrame
 
-> get_index_outline(df: pd.DataFrame, outline: str, index: int) -> pd.DataFrame:
+get_any_outline_mask(df: pd.DataFrame, outline: str) -> pd.DataFrame
+
+get_index_outline(df: pd.DataFrame, outline: str, index: int) -> pd.DataFrame:
+```
 
 The same is done for tags: events can be selected if their tags are a subset of the desired tags.
 
-> get_subset_match_tags_mask(cl: pd.Series, tags) -> pd.Series:
+```python
+get_subset_match_tags_mask(cl: pd.Series, tags) -> pd.Series:
+```
 
 ### Histograms
 
@@ -460,7 +466,8 @@ The **Pandas** library allows to perform a study, then redisplay the data with t
 Consider how each data point in the summary table represents a combination of total times dedicated to each activity within a fixed timeframe:
 
 ```
-Two data points of step-size '1 day' represent each a combination of times dedicated to every activity. A 'distance' can be defined between them, to record their relative difference. More complex operations can be built on this, to obtain interesting results.
+Two data points of step-size '1 day' represent each a combination of times dedicated to every activity.
+A 'distance' can be defined between them, to record their relative difference. More complex operations can be built on this, to obtain interesting results.
 ```
 
 Based on the relative 'similarity' between rows of the summary table, it is possible to group data points into 'clusters'. This can help to interpret different behaviours in the time-steps, such as _productive_ as opposed to _not productive_ during the university period.
@@ -576,13 +583,32 @@ In my study of the correlations, I also observed correlations between present an
 
 ![](assets/kendall_correlation_standard.png)
 
-### Transitions
+### Markov Chains
 
+A _Transition Matrix_ is a square matrix of probabilities that measures the rate of transition from some state [i] to a state [j] in some time period. In my [case](#clustering), I can construct a matrix which summarises the likelihood of switching from a day of 'University' activities to one of 'Projects' or 'Social'.
 
+Using a fixed step size, it is possible to estimate the probability of going from cluster A to B, adding up all the times a transition happened. This method is used to construct the coefficients of the matrix.
+
+![](assets/standard_transition_matrix.png)
+
+The object may be observed directly, or it can be interpreted as a [Markov Chain](https://en.wikipedia.org/wiki/Markov_chain) process. More specifically, a transformation that acts on a vector of probabilities (ie. where an entry i represents the probability of being in the cluster i) and produces a new vector representing the probabilities at the next time step.
+
+Since the probabilities are calculated numerically, one can assume that the matrix is regular enough (ie. ergodic), and compute the eigenvector associated to eigenvalue 1, which will give a probability vector serving as a stable point. 
+
+Coming back to the real world, this method takes a given allocation of activities (ie. clusters) and predicts the distribution in the next moment. Consider the problem of finding the point of optimal productivity. If you push yourself beyond it, your productivity in the next day will be lower. The following text gives the optimal division of tasks that can be maintained indefinitely.
+
+```
+Stable Distribution:
+Projects - 0.30443171, 
+Repetitive - 0.07481842, 
+Revision - 0.30414416, 
+Lessons - 0.21057073, 
+Social - 0.10603498.
+```
 
 ### Energy Function
 
-### UMAP - Topological Dimensionality Reduction
+### Topological Dimensionality Reduction
 
 # Extensions
 
