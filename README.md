@@ -6,8 +6,12 @@ The following page gives an outline for my process. The [full jupyter notebooks]
 
 For the time being, I use two notebooks, one to visualise single events, and the other to summary trends.
 
+![](assets/programs_sketch.png)
 
-_TODO include image of the pipeline here_
+<ins>Skip to the Data Analysis</ins>
+- [Clustering](#clustering): creating categories of days and interpreting them.
+- [Correlations](#correlations): studying how time dedicated to each activity relate.
+- [Energy Function](#energy-function): using a centextualised energy function to describe days and understand productivity.
 
 # Data Collection 
 
@@ -627,8 +631,6 @@ The following matrix shows the best cost vectors by time period. It should be no
 ![](assets/standard_energy_comparison.png)
 
 On a final note, energy methods fail to capture nonlinear effects: activities twice as long will be considered twice as 'costly'. There is also a deep ambiguity in what is generally done and what is exhausting to do: just being signed up for class does not guarantee paying attention, hence being drained by the energy expense.
-
-
 
 # Extensions
 
